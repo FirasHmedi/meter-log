@@ -175,8 +175,12 @@ adb install -r apk/*.apk
 # Home-screen widget: the provider must be registered; the deep link of a widget row must open the form.
 check_widget() { # lang
   local lang=$1
-  adb shell dumpsys appwidget | grep -q "$PKG/.widget.LogReading" || { echo "Widget provider not registered"; exit 1; }
-  echo "Widget provider registered"
+  # Listed as ComponentInfo{com.pomwik.meterlog/com.pomwik.meterlog.widget.LogReading}
+  if ! adb shell dumpsys appwidget | grep -E "$PKG/($PKG)?\.widget\.LogReading"; then
+    adb shell dumpsys appwidget | head -40
+    echo "Widget provider not registered"
+    exit 1
+  fi
 
   adb shell am force-stop "$PKG"
   adb shell am start -W -a android.intent.action.VIEW -d "meterlog://reading?meterId=1" "$PKG" >/dev/null
