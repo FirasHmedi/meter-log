@@ -12,8 +12,10 @@ export function Button({
   icon,
   variant = 'primary',
   disabled,
+  testID,
 }: {
   label: string;
+  testID?: string;
   onPress: () => void;
   icon?: IconName;
   variant?: 'primary' | 'secondary' | 'danger';
@@ -26,6 +28,7 @@ export function Button({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      testID={testID}
       onPress={onPress}
       disabled={disabled}
       style={({ pressed }) => [
@@ -39,12 +42,23 @@ export function Button({
   );
 }
 
-export function IconButton({ icon, label, onPress }: { icon: IconName; label: string; onPress: () => void }) {
+export function IconButton({
+  icon,
+  label,
+  onPress,
+  testID,
+}: {
+  icon: IconName;
+  label: string;
+  onPress: () => void;
+  testID?: string;
+}) {
   const p = usePalette();
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      testID={testID}
       hitSlop={8}
       onPress={onPress}
       style={({ pressed }) => [styles.iconButton, { opacity: pressed ? 0.5 : 1 }]}

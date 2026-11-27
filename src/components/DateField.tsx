@@ -27,7 +27,7 @@ export function DateField({ value, onChange, max }: { value: IsoDay; onChange: (
   const canNext = value < max;
   return (
     <View style={[s.row, { borderColor: p.border, backgroundColor: p.surface }]}>
-      <Pressable accessibilityRole="button" accessibilityLabel={t('previousDay')} hitSlop={6} style={s.arrow} onPress={() => onChange(addDays(value, -1))}>
+      <Pressable accessibilityRole="button" accessibilityLabel={t('previousDay')} testID="previous-day" hitSlop={6} style={s.arrow} onPress={() => onChange(addDays(value, -1))}>
         <MaterialIcons name="chevron-left" size={28} color={p.accent} />
       </Pressable>
       <Pressable accessibilityRole="button" accessibilityLabel={t('date')} style={s.center} onPress={openPicker}>

@@ -79,6 +79,7 @@ export default function MeterScreen() {
       <ScrollView contentContainerStyle={s.content}>
         <View style={s.addButton}>
           <Button
+            testID="add-reading"
             icon="add"
             label={t('addReading')}
             onPress={() => router.push({ pathname: '/reading', params: { meterId: String(meter.id) } })}

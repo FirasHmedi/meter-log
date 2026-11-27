@@ -19,7 +19,7 @@ export default function MetersScreen() {
     <View style={[s.screen, { backgroundColor: p.bg }]}>
       <Stack.Screen
         options={{
-          headerRight: () => <IconButton icon="settings" label={t('settings')} onPress={() => router.push('/settings')} />,
+          headerRight: () => <IconButton testID="settings" icon="settings" label={t('settings')} onPress={() => router.push('/settings')} />,
         }}
       />
       {!persistent ? (
@@ -45,6 +45,7 @@ export default function MetersScreen() {
           return (
             <Pressable
               accessibilityRole="button"
+              testID={`meter-${item.id}`}
               onPress={() => router.push({ pathname: '/meter/[id]', params: { id: String(item.id) } })}
               style={({ pressed }) => [s.row, { backgroundColor: p.surface, borderColor: p.border, opacity: pressed ? 0.7 : 1 }]}
             >
@@ -72,7 +73,7 @@ export default function MetersScreen() {
         }}
       />
       <View style={[s.fab, { bottom: insets.bottom + 16 }]}>
-        <Button icon="add" label={t('addMeter')} onPress={() => router.push('/meter/edit')} />
+        <Button testID="add-meter" icon="add" label={t('addMeter')} onPress={() => router.push('/meter/edit')} />
       </View>
     </View>
   );

@@ -5,11 +5,15 @@ App Android, hors ligne, open source. Français et anglais.
 
 [English version](README.md)
 
-| Compteur (eau) | Compteur (mode sombre) |
-| --- | --- |
-| ![Compteur](docs/screenshots/fr-meter.png) | ![Mode sombre](docs/screenshots/fr-meter-dark.png) |
+| Compteurs | Compteur | Nouveau relevé | Nouveau compteur |
+| --- | --- | --- | --- |
+| <img src="docs/screenshots/android/fr-meters.png" width="200" alt="Compteurs"> | <img src="docs/screenshots/android/fr-meter.png" width="200" alt="Compteur"> | <img src="docs/screenshots/android/fr-new-reading.png" width="200" alt="Nouveau relevé"> | <img src="docs/screenshots/android/fr-new-meter.png" width="200" alt="Nouveau compteur"> |
 
-*Aperçu web avec des données d’exemple, 360 px de large. Les captures Android sont produites par l’émulateur de la CI (artefact `screenshots`).*
+| Mode sombre | Relevés | Clavier ouvert | Réglages |
+| --- | --- | --- | --- |
+| <img src="docs/screenshots/android/fr-meter-dark.png" width="200" alt="Mode sombre"> | <img src="docs/screenshots/android/fr-meter-readings.png" width="200" alt="Relevés"> | <img src="docs/screenshots/android/fr-new-meter-keyboard.png" width="200" alt="Clavier ouvert"> | <img src="docs/screenshots/android/fr-settings.png" width="200" alt="Réglages"> |
+
+*Captures de l’émulateur Android de la CI (API 34, 1080×2400), avec des données d’exemple saisies dans l’app.*
 
 ## Fonctionnalités
 
@@ -43,9 +47,10 @@ cd android && ./gradlew assembleRelease
 
 L’APK de `android/app/build/outputs/apk/release/` est signé avec la clé de debug du modèle : bon pour tester,
 pas pour le Play Store. Le workflow GitHub Actions (`.github/workflows/android.yml`) lance les vérifications,
-compile l’APK, prend des captures sur un émulateur et joint l’APK à une release pour les tags `v*`.
+compile l’APK, prend des captures sur un émulateur en anglais et en français et joint l’APK à une release pour les tags `v*`.
 
-`npm run web` lance un aperçu web avec des données d’exemple gardées en mémoire (rien n’est enregistré).
+`npm run web` lance un aperçu web avec des données d’exemple gardées en mémoire (rien n’est enregistré). Ses anciennes
+captures sont dans `docs/screenshots/web/`.
 
 iOS n’est pas testé.
 

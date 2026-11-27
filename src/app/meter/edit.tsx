@@ -1,9 +1,10 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { confirmDelete } from '@/components/confirm';
+import { FormScreen } from '@/components/FormScreen';
 import { KIND_ICONS, usePalette } from '@/components/theme';
 import { Button, Field, Input } from '@/components/ui';
 import { useStore } from '@/data/store';
@@ -61,57 +62,55 @@ export default function MeterEditScreen() {
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: p.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <FormScreen>
       <Stack.Screen options={{ title: existing ? t('editMeter') : t('newMeter') }} />
-      <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
-        <Field label={t('name')} error={errors.name}>
-          <Input value={name} onChangeText={setName} placeholder={t('namePlaceholder')} maxLength={60} autoFocus={!existing} />
-        </Field>
+      <Field label={t('name')} error={errors.name}>
+        <Input testID="meter-name" value={name} onChangeText={setName} placeholder={t('namePlaceholder')} maxLength={60} autoFocus={!existing} />
+      </Field>
 
-        <Field label={t('type')}>
-          <View style={s.kinds} accessibilityRole="radiogroup">
-            {METER_KINDS.map((k) => {
-              const selected = k === kind;
-              return (
-                <Pressable
-                  key={k}
-                  accessibilityRole="radio"
-                  accessibilityState={{ selected }}
-                  onPress={() => setKind(k)}
-                  style={[s.kind, { borderColor: selected ? p.accent : p.border, backgroundColor: selected ? p.accent : p.surface }]}
-                >
-                  <MaterialIcons name={KIND_ICONS[k]} size={20} color={selected ? p.accentText : p.accent} />
-                  <Text style={[s.kindText, { color: selected ? p.accentText : p.text }]}>
-                    {t(`kind_${k}`)}
-                    {k !== 'custom' ? ` (${defaultUnit(k)})` : ''}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </Field>
-
-        {kind === 'custom' ? (
-          <Field label={t('unit')} error={errors.unit}>
-            <Input value={customUnit} onChangeText={setCustomUnit} placeholder={t('unitPlaceholder')} maxLength={12} />
-          </Field>
-        ) : null}
-
-        <Field label={t('pricePerUnit', { unit: unit || '…' })} hint={t('priceHint', { currency })} error={errors.price}>
-          <Input value={price} onChangeText={setPrice} placeholder={t('pricePlaceholder')} keyboardType="decimal-pad" />
-        </Field>
-
-        <View style={s.actions}>
-          <Button label={t('save')} icon="check" onPress={save} disabled={saving} />
-          {existing ? <Button label={t('delete')} icon="delete-outline" variant="danger" onPress={remove} /> : null}
+      <Field label={t('type')}>
+        <View style={s.kinds} accessibilityRole="radiogroup">
+          {METER_KINDS.map((k) => {
+            const selected = k === kind;
+            return (
+              <Pressable
+                key={k}
+                testID={`kind-${k}`}
+                accessibilityRole="radio"
+                accessibilityState={{ selected }}
+                onPress={() => setKind(k)}
+                style={[s.kind, { borderColor: selected ? p.accent : p.border, backgroundColor: selected ? p.accent : p.surface }]}
+              >
+                <MaterialIcons name={KIND_ICONS[k]} size={20} color={selected ? p.accentText : p.accent} />
+                <Text style={[s.kindText, { color: selected ? p.accentText : p.text }]}>
+                  {t(`kind_${k}`)}
+                  {k !== 'custom' ? ` (${defaultUnit(k)})` : ''}
+                </Text>
+              </Pressable>
+            );
+          })}
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </Field>
+
+      {kind === 'custom' ? (
+        <Field label={t('unit')} error={errors.unit}>
+          <Input value={customUnit} onChangeText={setCustomUnit} placeholder={t('unitPlaceholder')} maxLength={12} />
+        </Field>
+      ) : null}
+
+      <Field label={t('pricePerUnit', { unit: unit || '…' })} hint={t('priceHint', { currency })} error={errors.price}>
+        <Input testID="meter-price" value={price} onChangeText={setPrice} placeholder={t('pricePlaceholder')} keyboardType="decimal-pad" />
+      </Field>
+
+      <View style={s.actions}>
+        <Button testID="save" label={t('save')} icon="check" onPress={save} disabled={saving} />
+        {existing ? <Button label={t('delete')} icon="delete-outline" variant="danger" onPress={remove} /> : null}
+      </View>
+    </FormScreen>
   );
 }
 
 const s = StyleSheet.create({
-  content: { padding: 16, paddingBottom: 48 },
   kinds: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   kind: { flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 1, borderRadius: 20, paddingHorizontal: 12, minHeight: 44 },
   kindText: { fontSize: 15, fontWeight: '500' },
