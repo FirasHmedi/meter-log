@@ -1,8 +1,9 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 
 import { confirmDelete } from '@/components/confirm';
+import { FormScreen } from '@/components/FormScreen';
 import { DateField } from '@/components/DateField';
 import { usePalette } from '@/components/theme';
 import { Button, Field, Input } from '@/components/ui';
@@ -64,67 +65,65 @@ export default function ReadingScreen() {
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: p.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <FormScreen>
       <Stack.Screen options={{ title: existing ? t('editReading') : t('addReading') }} />
-      <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
-        {meter ? <Text style={[s.meter, { color: p.muted }]}>{meter.name}</Text> : null}
-        <Field label={t('date')}>
-          <DateField
-            value={date}
-            max={today}
-            onChange={(d) => {
-              setDate(d);
-              setError(null);
-            }}
-          />
-        </Field>
-        <Field
-          label={t('value', { unit })}
-          error={error}
-          hint={
-            previous
-              ? t('previousReading', { value: `${formatNumber(previous.value, locale, 3)} ${unit}`, date: formatDay(previous.date, locale) })
-              : undefined
-          }
-        >
-          <Input
-            value={valueText}
-            onChangeText={(v) => {
-              setValueText(v);
-              setError(null);
-            }}
-            placeholder={t('valuePlaceholder')}
-            keyboardType="decimal-pad"
-            autoFocus={!existing}
-            onSubmitEditing={save}
-          />
-        </Field>
-        <View style={[s.resetRow, { borderColor: p.border, backgroundColor: p.surface }]}>
-          <View style={s.resetText}>
-            <Text style={[s.resetLabel, { color: p.text }]}>{t('resetLabel')}</Text>
-            <Text style={[s.small, { color: p.muted }]}>{t('resetHint')}</Text>
-          </View>
-          <Switch
-            accessibilityLabel={t('resetLabel')}
-            value={reset}
-            onValueChange={(v) => {
-              setReset(v);
-              setError(null);
-            }}
-            trackColor={{ true: p.accent }}
-          />
+      {meter ? <Text style={[s.meter, { color: p.muted }]}>{meter.name}</Text> : null}
+      <Field label={t('date')}>
+        <DateField
+          value={date}
+          max={today}
+          onChange={(d) => {
+            setDate(d);
+            setError(null);
+          }}
+        />
+      </Field>
+      <Field
+        label={t('value', { unit })}
+        error={error}
+        hint={
+          previous
+            ? t('previousReading', { value: `${formatNumber(previous.value, locale, 3)} ${unit}`, date: formatDay(previous.date, locale) })
+            : undefined
+        }
+      >
+        <Input
+          testID="reading-value"
+          value={valueText}
+          onChangeText={(v) => {
+            setValueText(v);
+            setError(null);
+          }}
+          placeholder={t('valuePlaceholder')}
+          keyboardType="decimal-pad"
+          autoFocus={!existing}
+          onSubmitEditing={save}
+        />
+      </Field>
+      <View style={[s.resetRow, { borderColor: p.border, backgroundColor: p.surface }]}>
+        <View style={s.resetText}>
+          <Text style={[s.resetLabel, { color: p.text }]}>{t('resetLabel')}</Text>
+          <Text style={[s.small, { color: p.muted }]}>{t('resetHint')}</Text>
         </View>
-        <View style={s.actions}>
-          <Button label={t('save')} icon="check" onPress={save} disabled={saving} />
-          {existing ? <Button label={t('delete')} icon="delete-outline" variant="danger" onPress={remove} /> : null}
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        <Switch
+          accessibilityLabel={t('resetLabel')}
+          value={reset}
+          onValueChange={(v) => {
+            setReset(v);
+            setError(null);
+          }}
+          trackColor={{ true: p.accent }}
+        />
+      </View>
+      <View style={s.actions}>
+        <Button testID="save" label={t('save')} icon="check" onPress={save} disabled={saving} />
+        {existing ? <Button label={t('delete')} icon="delete-outline" variant="danger" onPress={remove} /> : null}
+      </View>
+    </FormScreen>
   );
 }
 
 const s = StyleSheet.create({
-  content: { padding: 16, paddingBottom: 48 },
   meter: { fontSize: 15, marginBottom: 12 },
   resetRow: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 10, padding: 12, marginBottom: 20 },
   resetText: { flex: 1, gap: 4 },

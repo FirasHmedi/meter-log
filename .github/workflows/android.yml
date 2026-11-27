@@ -2,7 +2,7 @@ name: Android
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'fix/**', 'feat/**']
     tags: ['v*']
   pull_request:
   workflow_dispatch:
@@ -73,24 +73,30 @@ jobs:
           api-level: 34
           target: google_apis
           arch: x86_64
+          profile: pixel_6
           disable-animations: true
           script: bash scripts/ci-screenshots.sh
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: screenshots
           path: screenshots/
           if-no-files-found: error
 
-      - name: Publish screenshots to the android-screenshots branch
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      # main -> android-screenshots; fix/foo -> android-screenshots-fix-foo
+      - name: Publish screenshots to a branch
+        if: always() && github.event_name == 'push' && github.ref_type == 'branch'
+        env:
+          BRANCH: ${{ github.ref_name }}
         run: |
-          cd screenshots
-          git init -q -b android-screenshots
+          if [ "$BRANCH" = main ]; then TARGET=android-screenshots; else TARGET="android-screenshots-${BRANCH//\//-}"; fi
+          mkdir -p screenshots && cd screenshots
+          git init -q -b "$TARGET"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -q -m "Android emulator screenshots for ${GITHUB_SHA}"
-          git push -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" android-screenshots
+          git commit -q --allow-empty -m "Android emulator screenshots for ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" "$TARGET"
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
