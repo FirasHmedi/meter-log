@@ -39,6 +39,8 @@ const dark: Palette = {
   warnBg: '#3A2E17',
 };
 
+export const palettes = { light, dark };
+
 export function usePalette(): Palette {
   return useColorScheme() === 'dark' ? dark : light;
 }

@@ -74,6 +74,16 @@ export const en = {
   version: 'Version {version}',
   sourceCode: 'Open source (MIT licence)',
   webPreview: 'Web preview with sample data. Nothing is saved.',
+  widget: 'Home-screen widget',
+  widgetTitle: 'Log a reading',
+  widgetNoMeters: 'Add a meter in the app.',
+  widgetNoReading: 'No reading yet',
+  widgetToday: 'today',
+  widgetYesterday: 'yesterday',
+  widgetDaysAgo: '{days} days ago',
+  widgetAdd: 'Add the widget to the home screen',
+  widgetAddHint: 'Shows your last reading per meter. Tap a meter to log a new reading.',
+  widgetAddManual: 'Your home screen cannot add it from here: touch and hold the home screen, then choose Widgets.',
 };
 
 export type Strings = typeof en;

@@ -26,6 +26,9 @@ App Android, hors ligne, open source. Français et anglais.
   les mois sont coupés à leurs vraies limites ; un mois couvert en partie par les relevés est atténué.
 - Rappel mensuel facultatif (notification locale). L’autorisation n’est demandée qu’à l’activation.
 - Export CSV des relevés d’un compteur via le menu de partage.
+- Widget d’écran d’accueil « Noter un relevé » : dernier relevé et nombre de jours écoulés, pour 2 compteurs
+  au plus (ceux qui attendent un relevé depuis le plus longtemps). Touchez un compteur pour ouvrir son
+  formulaire de relevé. Clair et sombre, français et anglais.
 - Thème clair et sombre, nombres et dates au format du téléphone.
 
 ## Confidentialité

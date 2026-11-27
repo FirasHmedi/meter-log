@@ -6,6 +6,9 @@ import { usePalette } from '@/components/theme';
 import { StoreProvider } from '@/data/store';
 import { t } from '@/i18n';
 
+// A deep link from the widget opens a form on top of the meters list, so Back leads to the app.
+export const unstable_settings = { initialRouteName: 'index' };
+
 export default function RootLayout() {
   const scheme = useColorScheme();
   const p = usePalette();

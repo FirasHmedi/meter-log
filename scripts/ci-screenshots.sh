@@ -172,9 +172,42 @@ adb shell wm size
 adb shell wm density
 adb install -r apk/*.apk
 
+# Home-screen widget: the provider must be registered; the deep link of a widget row must open the form.
+check_widget() { # lang
+  local lang=$1
+  adb shell dumpsys appwidget | grep -q "$PKG/.widget.LogReading" || { echo "Widget provider not registered"; exit 1; }
+  echo "Widget provider registered"
+
+  adb shell am force-stop "$PKG"
+  adb shell am start -W -a android.intent.action.VIEW -d "meterlog://reading?meterId=1" "$PKG" >/dev/null
+  sleep 6
+  find_xy "reading-value|Number shown on the meter|Nombre affiché sur le compteur" >/dev/null
+  shot "$lang-10-deep-link-reading"
+
+  # Optional: ask the launcher to pin the widget, accept its prompt, then show the home screen.
+  launch
+  tap "settings|Settings|Réglages"
+  sleep 2
+  tap "add-widget"
+  sleep 3
+  shot "$lang-11-pin-prompt"
+  if tap "add_button|Add to home screen|Add automatically|Ajouter à l’écran d’accueil|Ajouter à l'écran d'accueil|Ajouter automatiquement" 2>/dev/null; then
+    sleep 3
+    adb shell input keyevent 3
+    sleep 4
+    shot "$lang-12-widget-home"
+  else
+    echo "Launcher pin prompt not found: widget not placed on the home screen"
+  fi
+  adb shell dumpsys appwidget | grep -A3 "$PKG" || true
+  check_crash
+}
+
 run en
+check_widget en
 set_locale fr-FR
 run fr
+check_widget fr
 # Last, because changing the font scale saves the locale and can undo a later locale switch.
 keyboard_check fr Maison
 
