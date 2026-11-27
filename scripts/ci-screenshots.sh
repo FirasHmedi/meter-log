@@ -103,10 +103,6 @@ run() { # lang
   adb shell input text "$price"
   sleep 1
   shot "$lang-03-new-meter-keyboard"
-  # Scroll the form while the keyboard is open: the Save button must come above the keyboard.
-  adb shell input swipe 540 900 540 300 500
-  sleep 1
-  shot "$lang-03b-new-meter-keyboard-scrolled"
   hide_keyboard
   save
 
@@ -140,6 +136,25 @@ run() { # lang
   check_crash
 }
 
+# With a large font the reading form is taller than the space left by the keyboard:
+# it must scroll so that the Save button comes above the keyboard. Check screenshots only.
+keyboard_check() { # lang meter_name
+  adb shell settings put system font_scale 1.6
+  launch
+  tap "meter-1|$2"
+  sleep 2
+  tap "add-reading|Add a reading|Ajouter un relevé"
+  sleep 3
+  keyboard_shown || echo "Keyboard not shown for the keyboard check" >&2
+  shot "check-$1-keyboard-large-font"
+  adb shell input swipe 540 700 540 250 600
+  sleep 2
+  shot "check-$1-keyboard-large-font-scrolled"
+  hide_keyboard
+  adb shell input keyevent 4
+  adb shell settings put system font_scale 1.0
+}
+
 set_locale() { # e.g. fr-FR
   adb root >/dev/null 2>&1 || true
   adb wait-for-device
@@ -158,6 +173,7 @@ adb shell wm density
 adb install -r apk/*.apk
 
 run en
+keyboard_check en Home
 set_locale fr-FR
 run fr
 

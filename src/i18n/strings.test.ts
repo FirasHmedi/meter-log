@@ -13,4 +13,9 @@ describe('strings', () => {
   it('uses typographic apostrophes in visible French text', () => {
     for (const value of Object.values(fr)) expect(value).not.toContain("'");
   });
+
+  it('keeps French double punctuation on the same line as the word before it', () => {
+    // A normal space before : ; ! ? lets Android wrap the line before the sign.
+    for (const value of Object.values(fr)) expect(value).not.toMatch(/ [:;!?]/);
+  });
 });
