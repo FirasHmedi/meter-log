@@ -26,3 +26,7 @@ sleep 8
 adb exec-out screencap -p > screenshots/03-meters-dark.png
 
 ls -l screenshots
+
+# Fail if the app crashed during the run.
+if adb logcat -d | grep -q "FATAL EXCEPTION"; then adb logcat -d | grep -A30 "FATAL EXCEPTION"; echo "App crashed"; exit 1; fi
+adb shell dumpsys window | grep -E "mCurrentFocus" || true
