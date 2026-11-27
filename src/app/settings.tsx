@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 
 import { usePalette } from '@/components/theme';
-import { Section } from '@/components/ui';
+import { Button, Section } from '@/components/ui';
 import { cancelReminder, remindersAvailable, scheduleMonthlyReminder } from '@/data/reminder';
 import { useStore } from '@/data/store';
 import { t } from '@/i18n';
+import { pinWidget, widgetsAvailable } from '@/widget/update';
 
 const DAYS = [1, 5, 10, 15, 20, 25, 28];
 
@@ -16,6 +17,12 @@ export default function SettingsScreen() {
   const { settings } = store;
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [widgetMessage, setWidgetMessage] = useState<string | null>(null);
+
+  async function addWidget() {
+    setWidgetMessage(null);
+    if (!(await pinWidget())) setWidgetMessage(t('widgetAddManual'));
+  }
 
   async function apply(enabled: boolean, day: number) {
     setBusy(true);
@@ -82,6 +89,16 @@ export default function SettingsScreen() {
           <Text style={[s.small, s.message, { color: p.danger }]}>{message ?? t('reminderUnavailable')}</Text>
         ) : null}
       </Section>
+
+      {widgetsAvailable ? (
+        <Section title={t('widget')}>
+          <View style={s.about}>
+            <Text style={[s.small, { color: p.muted }]}>{t('widgetAddHint')}</Text>
+            <Button testID="add-widget" icon="widgets" variant="secondary" label={t('widgetAdd')} onPress={addWidget} />
+            {widgetMessage ? <Text style={[s.small, { color: p.text }]}>{widgetMessage}</Text> : null}
+          </View>
+        </Section>
+      ) : null}
 
       <Section title={t('about')}>
         <View style={s.about}>

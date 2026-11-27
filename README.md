@@ -26,6 +26,8 @@ Android app, offline, open source. French and English.
   months are cut at their real boundaries; months only partly covered by readings are shown faded.
 - Optional monthly reminder (local notification). The notification permission is asked only when you turn it on.
 - CSV export of a meter's readings through the share sheet.
+- Home-screen widget "Log a reading": last reading and days since, for up to 2 meters (the ones that need a
+  reading most). Tap a meter to open its new-reading form. Light and dark, French and English.
 - Light and dark theme, numbers and dates in the phone's format.
 
 ## Privacy

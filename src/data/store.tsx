@@ -1,5 +1,7 @@
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { updateWidgets } from '@/widget/update';
+
 import { repo } from './repo';
 import { DEFAULT_SETTINGS, type MeterInput, type ReadingInput, type Settings, type Snapshot } from './types';
 
@@ -22,8 +24,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
 
   const reload = useCallback(async () => {
-    setSnapshot(await repo.load());
+    const loaded = await repo.load();
+    setSnapshot(loaded);
     setReady(true);
+    updateWidgets(loaded);
   }, []);
 
   useEffect(() => {
@@ -32,6 +36,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       .load()
       .then((loaded) => {
         if (alive) setSnapshot(loaded);
+        updateWidgets(loaded);
       })
       .catch(() => undefined)
       .finally(() => {
