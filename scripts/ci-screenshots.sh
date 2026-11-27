@@ -158,8 +158,6 @@ keyboard_check() { # lang meter_name
 set_locale() { # e.g. fr-FR
   adb root >/dev/null 2>&1 || true
   adb wait-for-device
-  # Changing font_scale saves the current locales in the system_locales setting, which wins over the property.
-  adb shell settings put system system_locales "$1"
   adb shell setprop persist.sys.locale "$1"
   adb shell setprop ctl.restart zygote
   sleep 10
@@ -175,8 +173,9 @@ adb shell wm density
 adb install -r apk/*.apk
 
 run en
-keyboard_check en Home
 set_locale fr-FR
 run fr
+# Last, because changing the font scale saves the locale and can undo a later locale switch.
+keyboard_check fr Maison
 
 ls -l "$OUT"
